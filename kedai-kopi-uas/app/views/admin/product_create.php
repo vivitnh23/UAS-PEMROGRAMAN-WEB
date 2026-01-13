@@ -1,0 +1,130 @@
+<?php
+$title = "Tambah Produk Baru";
+include 'app/views/layout/header.php';
+?>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-plus me-2"></i>Tambah Produk Baru</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="/admin/products" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Kembali
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Form Tambah Produk</h5>
+            </div>
+            <div class="card-body">
+                <?php if(isset($error)): ?>
+                    <div class="alert alert-danger"><?php echo $error; ?></div>
+                <?php endif; ?>
+                
+                <form method="POST" action="/admin/products?action=create" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Nama Produk <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="category" class="form-label">Kategori <span class="text-danger">*</span></label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Pilih Kategori</option>
+                                <option value="Hot Coffee">Hot Coffee</option>
+                                <option value="Cold Coffee">Cold Coffee</option>
+                                <option value="Tea">Tea</option>
+                                <option value="Dessert">Dessert</option>
+                                <option value="Food">Food</option>
+                                <option value="Snack">Snack</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Deskripsi <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="price" class="form-label">Harga (Rp) <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" class="form-control" id="price" name="price" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="stock" class="form-label">Stok <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="stock" name="stock" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Gambar Produk</label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <div class="form-text">Format: JPG, PNG, GIF. Maksimal 2MB</div>
+                        <div class="mt-2" id="imagePreview"></div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="reset" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-redo me-2"></i>Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Simpan Produk
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Image preview
+document.getElementById('image').addEventListener('change', function(e) {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = '';
+    
+    if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.maxWidth = '200px';
+            img.style.maxHeight = '200px';
+            img.style.borderRadius = '5px';
+            img.style.marginTop = '10px';
+            preview.appendChild(img);
+        }
+        
+        reader.readAsDataURL(this.files[0]);
+    }
+});
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const price = document.getElementById('price').value;
+    const stock = document.getElementById('stock').value;
+    
+    if (price < 0) {
+        e.preventDefault();
+        alert('Harga tidak boleh negatif!');
+        return false;
+    }
+    
+    if (stock < 0) {
+        e.preventDefault();
+        alert('Stok tidak boleh negatif!');
+        return false;
+    }
+});
+</script>
+
+<?php include 'app/views/layout/footer.php'; ?>
